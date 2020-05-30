@@ -143,24 +143,25 @@ let UiControler = (() => {
             return {
                 type: document.querySelector(Domstring.inputType).value,
                 Description: document.querySelector(Domstring.inputDescription).value,
-                value: document.querySelector(Domstring.inputValue).value
+                // convert string to floating number
+                value: parseFloat(document.querySelector(Domstring.inputValue).value)
             }
         },
 
         addListItem(obj, type) {
             let html, element, newHtml;
             if (type === 'inc') {
-                element =  Domstring.incomesContainer;
+                element = Domstring.incomesContainer;
                 html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div> <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i> </button></div></div></div>'
             } else if (type === 'exp') {
                 element = Domstring.expensesContainer;
                 html = '<div class="item clearfix" id="expense-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
-// Replace the placeholder with some actule data
+            // Replace the placeholder with some actule data
             newHtml = html.replace('%id%', obj.id)
             newHtml = newHtml.replace('%description%', obj.descritption);
             newHtml = newHtml.replace('%value%', obj.value);
-// Insert the HTML into the DOM
+            // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml)
 
 
@@ -168,17 +169,17 @@ let UiControler = (() => {
 
         },
 
-        clearFields (){
-            let fields , fieldsArr ;
-            fields= document.querySelectorAll(Domstring.inputDescription + ',' + Domstring.inputValue);
-           // console.log(fields);
-// Convert NodeList into Array
+        clearFields() {
+            let fields, fieldsArr;
+            fields = document.querySelectorAll(Domstring.inputDescription + ',' + Domstring.inputValue);
+            // console.log(fields);
+            // Convert NodeList into Array
             fieldsArr = Array.prototype.slice.call(fields);
 
             fieldsArr.forEach((current, index, array) => {
-               // console.log(cur,index,array);
-               current.value = "";
-               //fieldsArr[0].focus()
+                // console.log(cur,index,array);
+                current.value = "";
+                fieldsArr[0].focus()
             });
 
 
@@ -220,19 +221,24 @@ let AppControler = ((bugcntr, uicntr) => {
         var input, addNewItem;
 
         input = uicntr.getInput()
+        
+
+        if (input.Description !== "" && !isNaN(input.value) && input.value > 0 && isNaN(input.Description)) {
+            // 2 . add the item to the budgete    controler
+
+            addNewItem = bugcntr.addItem(input.type, input.Description, input.value);
 
 
+            console.log(addNewItem);
+            // 3 . add the item to the UI
 
-        // 2 . add the item to the budgete    controler
-
-        addNewItem = bugcntr.addItem(input.type, input.Description, input.value);
-
-
-        console.log(addNewItem);
-        // 3 . add the item to the UI
-
-        uicntr.addListItem(addNewItem, input.type)
-        uicntr.clearFields()
+            uicntr.addListItem(addNewItem, input.type)
+            uicntr.clearFields()
+        }
+        else {
+            alert("Please insert valied input type")
+            uicntr.clearFields()
+        }
         // 4 . calcalate the budgate 
         // 5 . Update the budgete on the Display 
 
@@ -259,11 +265,11 @@ Array.prototype.slice;
 var test = document.querySelectorAll('.add__type' + ',' + '.add__value');
 // console.log(Array.prototype.slice(test));
 console.log(test);
-Arr = Array.prototype.slice.call(test,1);
+Arr = Array.prototype.slice.call(test, 1);
 console.log(Arr);
-var rakib = [1,2,4];
-rakib.forEach( function(current){
-    console.log(current.toString()); 
+var rakib = [1, 2, 4];
+rakib.forEach(function (current) {
+    console.log(current.toString());
 })
 var sakib = rakib.slice();
 //console.log(sakib);
