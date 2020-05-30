@@ -156,14 +156,30 @@ let UiControler = (() => {
                 element = Domstring.expensesContainer;
                 html = '<div class="item clearfix" id="expense-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
-
+// Replace the placeholder with some actule data
             newHtml = html.replace('%id%', obj.id)
             newHtml = newHtml.replace('%description%', obj.descritption);
             newHtml = newHtml.replace('%value%', obj.value);
-
+// Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml)
 
 
+
+
+        },
+
+        clearFields (){
+            let fields , fieldsArr ;
+            fields= document.querySelectorAll(Domstring.inputDescription + ',' + Domstring.inputValue);
+           // console.log(fields);
+// Convert NodeList into Array
+            fieldsArr = Array.prototype.slice.call(fields);
+
+            fieldsArr.forEach((current, index, array) => {
+               // console.log(cur,index,array);
+               current.value = "";
+               //fieldsArr[0].focus()
+            });
 
 
         },
@@ -216,6 +232,7 @@ let AppControler = ((bugcntr, uicntr) => {
         // 3 . add the item to the UI
 
         uicntr.addListItem(addNewItem, input.type)
+        uicntr.clearFields()
         // 4 . calcalate the budgate 
         // 5 . Update the budgete on the Display 
 
@@ -236,6 +253,20 @@ let AppControler = ((bugcntr, uicntr) => {
 
 console.log(AppControler.init());
 
+let amr = [];
+console.log(amr);
+Array.prototype.slice;
+var test = document.querySelectorAll('.add__type' + ',' + '.add__value');
+// console.log(Array.prototype.slice(test));
+console.log(test);
+Arr = Array.prototype.slice.call(test,1);
+console.log(Arr);
+var rakib = [1,2,4];
+rakib.forEach( function(current){
+    console.log(current.toString()); 
+})
+var sakib = rakib.slice();
+//console.log(sakib);
 
 
 // NEW KEYWORD PRACTICE
