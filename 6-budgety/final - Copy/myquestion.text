@@ -1,0 +1,10 @@
+var total = function(type) {
+    var sume = 0;
+    // if(type === 'inc'){
+    Data.allItems[type].forEach(function (current, index, arr) {
+        //var sum = 0  //  does not work in this way
+        sume += current.value
+        Data.total[type] = sume
+    })};
+
+    // If i assinged some value (0) out of  {} , the some ation is not will be processed . It works properly whe it is intalized in {}

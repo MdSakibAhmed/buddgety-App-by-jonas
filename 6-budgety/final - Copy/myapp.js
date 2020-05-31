@@ -73,6 +73,8 @@ let budgteControler = (() => {
     // var totalIncom = 0;
     // var totalExpense = 0;
 
+   
+
     // Better way
     let Data = {
         allItems: {
@@ -81,10 +83,20 @@ let budgteControler = (() => {
         },
         total: {
             exp: 0,
-            inc: 0
+            inc: 0,
+            budgate:0,
+            parcentage:0
         }
 
     };
+    var total = function(type) {
+        var sume = 0;
+        // if(type === 'inc'){
+        Data.allItems[type].forEach(function (current, index, arr) {
+            
+            sume += current.value
+            Data.total[type] = sume
+        })};
 
     return {
 
@@ -117,6 +129,70 @@ let budgteControler = (() => {
             return newItem;
 
 
+        },
+
+        calcaluteBudgate() {
+            var budget;
+// sume all incomes and expenses
+            total('exp');
+            total('inc')
+// calcaluete the budgete : income - expeses
+
+Data.total.budgate = Data.total.inc - Data.total.exp
+
+
+
+// calcalute the parcentage of income we spant : income / expenses
+Data.total.parcentage =( Data.total.inc / Data.total.exp) * 100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // if(type === 'inc'){
+            // Data.allItems[type].forEach(function (current, index, arr) {
+            //     myIncome = 0
+            //     myIncome += current.value
+            //     Data.total[type] = myIncome
+            // });
+
+            // }
+            // else if(type === 'exp'){
+            // Data.allItems[type].forEach(function(current){
+            //     myExpense = 0;
+            //     myExpense += current.value;
+            //     Data.total[type] = myExpense ;
+            // });
+
+            // }
+
+
+
+        },
+
+
+        getbudget() {
+            return {
+                income: Data.total.inc,
+                expenses: Data.total.exp,
+                budgete: Data.total.budgate,
+                parcantege: Data.total.parcentage
+            }
         },
         testing() {
             console.log(Data);
@@ -213,7 +289,14 @@ let AppControler = ((bugcntr, uicntr) => {
 
         })
     }
-
+    var updateBudgete = function () {
+        //     1 . calcalute budgteControler
+        bugcntr.calcaluteBudgate()
+        //     2. return the budgteControler
+        var budget = bugcntr.getbudget();
+        //     3 . Display the budgate on the UI
+        console.log(budget);
+    }
 
     // Custome function
     var controAddItem = () => {
@@ -221,7 +304,7 @@ let AppControler = ((bugcntr, uicntr) => {
         var input, addNewItem;
 
         input = uicntr.getInput()
-        
+
 
         if (input.Description !== "" && !isNaN(input.value) && input.value > 0 && isNaN(input.Description)) {
             // 2 . add the item to the budgete    controler
@@ -229,18 +312,19 @@ let AppControler = ((bugcntr, uicntr) => {
             addNewItem = bugcntr.addItem(input.type, input.Description, input.value);
 
 
-            console.log(addNewItem);
+            //console.log(addNewItem);
             // 3 . add the item to the UI
 
             uicntr.addListItem(addNewItem, input.type)
+            // 4.clear the fields
             uicntr.clearFields()
-        }
-        else {
+        } else {
             alert("Please insert valied input type")
             uicntr.clearFields()
         }
-        // 4 . calcalate the budgate 
+
         // 5 . Update the budgete on the Display 
+        updateBudgete()
 
 
     }
@@ -299,5 +383,3 @@ var sakib = rakib.slice();
 
 // let p3 = {
 //     name : 'rakib'
-// }
-// console.log(p3);
