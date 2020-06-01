@@ -73,7 +73,7 @@ let budgteControler = (() => {
     // var totalIncom = 0;
     // var totalExpense = 0;
 
-   
+
 
     // Better way
     let Data = {
@@ -84,19 +84,20 @@ let budgteControler = (() => {
         total: {
             exp: 0,
             inc: 0,
-            budgate:0,
-            parcentage:0
-        }
 
+        },
+        budgate: 0,
+        parcentage: -1
     };
-    var total = function(type) {
+    var total = function (type) {
         var sume = 0;
         // if(type === 'inc'){
-        Data.allItems[type].forEach(function (current, index, arr) {
-            
+        Data.allItems[type].forEach(function (current) {
+
             sume += current.value
             Data.total[type] = sume
-        })};
+        })
+    };
 
     return {
 
@@ -133,17 +134,23 @@ let budgteControler = (() => {
 
         calcaluteBudgate() {
             var budget;
-// sume all incomes and expenses
+            // sume all incomes and expenses
             total('exp');
             total('inc')
-// calcaluete the budgete : income - expeses
+            // calcaluete the budgete : income - expeses
 
-Data.total.budgate = Data.total.inc - Data.total.exp
+            Data.budgate = Data.total.inc - Data.total.exp
 
 
+            if (Data.total.inc > 0) {
+                // calcalute the parcentage of income we spant : income / expenses
+                // round Mehtode converts floating inot  nearest intezer
+                Data.parcentage = Math.round((Data.total.exp / Data.total.inc) * 100)
 
-// calcalute the parcentage of income we spant : income / expenses
-Data.total.parcentage =( Data.total.inc / Data.total.exp) * 100
+                // Expanse 100 , income 200 . so percentege is 100/200 = 50% 0.5 
+            } else {
+                Data.parcentage = -1;
+            }
 
 
 
@@ -190,8 +197,8 @@ Data.total.parcentage =( Data.total.inc / Data.total.exp) * 100
             return {
                 income: Data.total.inc,
                 expenses: Data.total.exp,
-                budgete: Data.total.budgate,
-                parcantege: Data.total.parcentage
+                budgete: Data.budgate,
+                parcantege: Data.parcentage
             }
         },
         testing() {
@@ -211,7 +218,11 @@ let UiControler = (() => {
         inputValue: '.add__value',
         inputBtn: '.add__btn',
         expensesContainer: '.expenses__list',
-        incomesContainer: '.income__list'
+        incomesContainer: '.income__list',
+        allIncomes: ".budget__income--value",
+        allExpenses: ".budget__expenses--value",
+        totalBaddgate: ".budget__value",
+        allExpParcentage: ".budget__expenses--percentage"
     }
 
     return {
@@ -224,7 +235,7 @@ let UiControler = (() => {
             }
         },
 
-        addListItem(obj, type) {
+        addListItem(obj, type, parcent) {
             let html, element, newHtml;
             if (type === 'inc') {
                 element = Domstring.incomesContainer;
@@ -237,6 +248,7 @@ let UiControler = (() => {
             newHtml = html.replace('%id%', obj.id)
             newHtml = newHtml.replace('%description%', obj.descritption);
             newHtml = newHtml.replace('%value%', obj.value);
+            // newHtml = newHtml.replace('%21', parcent.parcantege)
             // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml)
 
@@ -244,6 +256,38 @@ let UiControler = (() => {
 
 
         },
+        allIncAndExp(total) {
+
+
+            // var totaFields = document.querySelectorAll(Domstring.allIncomes + ',' + Domstring.allExpenses + ',' + Domstring.allExpParcentage); 
+            // totalArr = Array.prototype.slice.call(totaFields);
+
+            // totalArr.foEach(function (current) {
+
+
+            // })
+
+
+
+
+            document.querySelector(Domstring.allIncomes).textContent = '+ ' + total.income;
+            document.querySelector(Domstring.allExpenses).textContent = '- ' + total.expenses;
+            if (total.parcantege > 0) {
+                document.querySelector(Domstring.allExpParcentage).textContent = total.parcantege + '%';
+
+            } else {
+                document.querySelector(Domstring.allExpParcentage).textContent = '---'
+            }
+
+
+
+            document.querySelector(Domstring.totalBaddgate).textContent = '+ ' + total.budgete;
+
+
+
+        },
+
+
 
         clearFields() {
             let fields, fieldsArr;
@@ -295,6 +339,9 @@ let AppControler = ((bugcntr, uicntr) => {
         //     2. return the budgteControler
         var budget = bugcntr.getbudget();
         //     3 . Display the budgate on the UI
+        uicntr.allIncAndExp(budget);
+
+
         console.log(budget);
     }
 
@@ -332,6 +379,14 @@ let AppControler = ((bugcntr, uicntr) => {
     return {
         init() {
             console.log('Application has started ');
+
+            // set allthings to 0
+            uicntr.allIncAndExp({
+                income: 0,
+                expenses: 0,
+                budgete: 0,
+                parcantege: '---'
+            })
             setupEventListner()
         }
     }
