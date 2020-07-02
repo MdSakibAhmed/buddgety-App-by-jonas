@@ -391,7 +391,7 @@ let UiControler = (() => {
             document.querySelector(Domstring.allIncomes).textContent =  formeatNumber( total.income,'inc');
             document.querySelector(Domstring.allExpenses).textContent =   formeatNumber( total.expenses,'exp');
             if (total.parcantege > 0) {
-                document.querySelector(Domstring.allExpParcentage).textContent = total.parcantege + '%#';
+                document.querySelector(Domstring.allExpParcentage).textContent = total.parcantege + '%';
 
             } else {
                 document.querySelector(Domstring.allExpParcentage).textContent = '---'
